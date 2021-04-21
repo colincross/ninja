@@ -557,12 +557,12 @@ bool Builder::AddTarget(Node* target, string* err) {
     return false;
 
   if (Edge* in_edge = target->in_edge()) {
-    if (in_edge->outputs_ready())
-      return true;  // Nothing to do.
+    if (!in_edge->outputs_ready() &&
+        !plan_.AddTarget(target, err)) {
+      return false;
+    }
   }
 
-  if (!plan_.AddTarget(target, err))
-    return false;
 
   return true;
 }
